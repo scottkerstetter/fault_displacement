@@ -5,7 +5,12 @@ version: 1.0
 author: S Kerstetter  
 created: 2021-12-20  
 
-Calculates displacement for a fault given some inputs.  
+Calculates displacement for a fault.  
+Required data:  
+- id
+- strike azimuth (degrees)
+- dip (degrees)
+- transport direction azimuth (degrees)
 
 References:  
 http://www.structuralgeology.org/2012/05/how-calculate-apparent-dip-real-dip.html  
