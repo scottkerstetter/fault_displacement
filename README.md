@@ -10,6 +10,7 @@ Required data:
 - id
 - strike azimuth (degrees)
 - dip (degrees)
+- vertical displacement (throw; any units)
 - transport direction azimuth (degrees)
 
 References:  
