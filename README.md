@@ -1,7 +1,6 @@
 # fault_displacement
 Calculate net slip of fault given inputs of fault strike, dip, vertical displacement (throw) and transport direction.  
 
-version: 1.0  
 author: S Kerstetter  
 created: 2021-12-20  
 
