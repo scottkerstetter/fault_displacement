@@ -1,7 +1,6 @@
-print("""
+"""
 FAULT DISPLACEMENT
 
-version: 1.0
 author: S Kerstetter
 created: 2021-12-20
 
@@ -11,22 +10,28 @@ References:
 http://www.structuralgeology.org/2012/05/how-calculate-apparent-dip-real-dip.html
 https://app.visiblegeology.com/apparentDip.html
 Biholar, A., 2015 (THESIS)
-""")
+"""
 
 print("importing libraries...")
 import math
+import plots
 
 # input variables
-inputFileName = "faults.csv"
+inputFileName = "fault_model.csv"
 transDirDeg = 295 # transport direction in degrees
 
-# **** START SCRIPT ****
-def read_input_file(inputFile):
+# **** IMPORT FUNCTIONS ****
+# read fault data in one of two formats:
+# - strike and dip data
+# - two xy points along a fault's strike line
+def read_fault_orientations(inputFile):
     # reads input file (csv)
     # extracts fault names, strikes and dips
     with open(inputFile) as csv:
         faultList = []
-        for row in csv:
+        for i, row in enumerate(csv):
+            if i == 0:
+                continue
             row_items = row.split(',')
             faultDict = {
                         "id":row_items[0],
@@ -37,6 +42,22 @@ def read_input_file(inputFile):
             faultList.append(faultDict)
     return faultList
 
+def read_fault_xy(inputFile):
+    with open (inputFile) as csv:
+        faultList = []
+        for i, row in enumerate(csv):
+            if i == 0:
+                continue
+            row_items = row.split(',')
+            faultDict = {
+                "name":row_items[0],
+                "x":(float(row_items[1]),float(row_items[3])),
+                "y":(float(row_items[2]),float(row_items[4]))
+            }
+            faultList.append(faultDict)
+    return faultList
+
+# **** CALCULATIONS FOR FAULT DISPLACEMENT ****
 def calc_apparent_dip(faultData, transportDirection):
     # convert strike and dip (delta) into radians
     strike = math.radians(faultData['strike'])
@@ -63,11 +84,30 @@ def calc_horizontal_displacement(faultData, transportDirection):
     horizontalDisplacement = faultData['verticalDisplacement'] / math.tan(dip)
     return horizontalDisplacement
 
-# **** INITIATE SCRIPT ****
-print("reading input file...")
-faultList = read_input_file(inputFileName)
+def calc_dip_direction():
+    pass
+
+# **** FUNCTIONS USED FOR INPUTS OF XY DATA ****
+def calc_strike_from_xy():
+    # calculate the strike line of a fault given 2 points (xy's)
+    pass
+
     
+def calc_dip_direction_from_text():
+    # used to calculate dip direction from cardinal directions such as "east", "north", etc.
+    pass
+
+# **** INITIATE SCRIPT ****
+print("Welcome to Fault Displacement!")
+print("reading input file...")
+faultList = read_fault_xy(inputFileName)
+
 for fault in faultList:
-    fault["netSlip"] = calc_netslip(fault, transDirDeg)
-    fault["horizontalDisplacement"] = calc_horizontal_displacement(fault, transDirDeg)
     print(fault)
+
+plots.plot_map(faultList)
+
+# for fault in faultList:
+    # fault["netSlip"] = calc_netslip(fault, transDirDeg)
+    # fault["horizontalDisplacement"] = calc_horizontal_displacement(fault, transDirDeg)
+    # print(fault)
