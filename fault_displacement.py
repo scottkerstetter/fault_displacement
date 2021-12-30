@@ -15,9 +15,12 @@ Biholar, A., 2015 (THESIS)
 print("importing libraries...")
 import math
 import plots
+import fault_blocks
+import draw_blocks
 
 # input variables
 inputFileName = "fault_model.csv"
+inputFileName2 = "block_assignment.csv"
 transDirDeg = 295 # transport direction in degrees
 
 # **** IMPORT FUNCTIONS ****
@@ -42,7 +45,7 @@ def read_fault_orientations(inputFile):
             faultList.append(faultDict)
     return faultList
 
-def read_fault_xy(inputFile):
+def read_fault_xy_for_plt(inputFile):
     with open (inputFile) as csv:
         faultList = []
         for i, row in enumerate(csv):
@@ -56,6 +59,35 @@ def read_fault_xy(inputFile):
             }
             faultList.append(faultDict)
     return faultList
+
+
+def read_fault_xy_for_arcade(inputFile):
+    with open (inputFile) as csv:
+        faultList = []
+        for i, row in enumerate(csv):
+            if i == 0:
+                continue
+            row_items = row.split(',')
+            faultDict = {
+                "name":row_items[0],
+                "p1":(float(row_items[1]),float(row_items[2])),
+                "p2":(float(row_items[3]),float(row_items[4]))
+            }
+            faultList.append(faultDict)
+    return faultList
+
+def read_vertices(inputFile):
+    masterList = []
+    with open (inputFile) as csv:
+        for i, row in enumerate(csv):
+            if i == 0:
+                continue
+            row_items = row.split(',')
+            block_id = row_item[0]
+            x = int(row_item[1])
+            y = int(row_item[2])
+    return masterList
+
 
 # **** CALCULATIONS FOR FAULT DISPLACEMENT ****
 def calc_apparent_dip(faultData, transportDirection):
@@ -100,12 +132,28 @@ def calc_dip_direction_from_text():
 # **** INITIATE SCRIPT ****
 print("Welcome to Fault Displacement!")
 print("reading input file...")
-faultList = read_fault_xy(inputFileName)
+faultList = read_fault_xy_for_arcade(inputFileName)
 
 for fault in faultList:
     print(fault)
 
-plots.plot_map(faultList)
+#plots.plot_map(faultList)
+
+
+blockAssignment = fault_blocks.read_block_assignment(inputFileName2)
+
+for block in blockAssignment:
+    print(block)
+
+
+
+masterList = []
+for block in blockAssignment:
+    masterList.append(fault_blocks.make_point_list(block, faultList))
+
+draw_blocks.render_fault_block(masterList[1])
+
+draw_blocks.arcade.run()
 
 # for fault in faultList:
     # fault["netSlip"] = calc_netslip(fault, transDirDeg)
