@@ -15,8 +15,7 @@ Biholar, A., 2015 (THESIS)
 print("importing libraries...")
 import math
 import plots
-import fault_blocks
-import draw_blocks
+
 
 # input variables
 inputFileName = "fault_model.csv"
@@ -129,33 +128,40 @@ def calc_dip_direction_from_text():
     # used to calculate dip direction from cardinal directions such as "east", "north", etc.
     pass
 
+def move_block_model():
+    # create list of blocks that need to be moved.
+    # pop blocks from list after they are moved.
+    # keep running sum of horizontal displacement equal to current block and all previous blocks.
+    pass
+
 # **** INITIATE SCRIPT ****
-print("Welcome to Fault Displacement!")
-print("reading input file...")
-faultList = read_fault_xy_for_arcade(inputFileName)
+if __name__ == "__main__":
+    print("Welcome to Fault Displacement!")
+    print("reading input file...")
+    faultList = read_fault_xy_for_plt(inputFileName)
 
-for fault in faultList:
-    print(fault)
+    for fault in faultList:
+        print(fault)
 
-#plots.plot_map(faultList)
+    plots.plot_map(faultList)
+
+    """
+    blockAssignment = fault_blocks.read_block_assignment(inputFileName2)
+
+    for block in blockAssignment:
+        print(block)
 
 
-blockAssignment = fault_blocks.read_block_assignment(inputFileName2)
 
-for block in blockAssignment:
-    print(block)
+    masterList = []
+    for block in blockAssignment:
+        masterList.append(fault_blocks.make_point_list(block, faultList))
 
+    draw_blocks.render_fault_block(masterList[1])
 
-
-masterList = []
-for block in blockAssignment:
-    masterList.append(fault_blocks.make_point_list(block, faultList))
-
-draw_blocks.render_fault_block(masterList[1])
-
-draw_blocks.arcade.run()
-
-# for fault in faultList:
-    # fault["netSlip"] = calc_netslip(fault, transDirDeg)
-    # fault["horizontalDisplacement"] = calc_horizontal_displacement(fault, transDirDeg)
-    # print(fault)
+    draw_blocks.arcade.run()
+    """
+    # for fault in faultList:
+        # fault["netSlip"] = calc_netslip(fault, transDirDeg)
+        # fault["horizontalDisplacement"] = calc_horizontal_displacement(fault, transDirDeg)
+        # print(fault)
